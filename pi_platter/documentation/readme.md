@@ -1,4 +1,4 @@
-## talkpp
+## Documentation
 
 This directory contains documentation for the Solar Pi Platter.
 
