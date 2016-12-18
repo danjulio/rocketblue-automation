@@ -11,7 +11,7 @@ Both the source and a binary compiled under Raspbian Jessie are included.  The b
 
 talkpp takes the following arguments:
 
-   talkpp [-c <command string>]
+    talkpp [-c <command string>]
 
           [-s] [-t] [-f]
 
