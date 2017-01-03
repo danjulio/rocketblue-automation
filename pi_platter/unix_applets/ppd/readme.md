@@ -29,7 +29,7 @@ libudev-dev must be installed:
 ppd should be started as a daemon at start-up.  The easiest way to do this is to include somethine like the following in /etc/rc.local.
 
     # Start the Pi Platter Daemon
-    /usr/local/bin/pdd -p 23000 -r -d &
+    /usr/local/bin/ppd -p 23000 -r -d &
 
 It is also possible to create a conf file in /etc/init or a startup script in /etc/init.d.
 

@@ -25,21 +25,21 @@ talkpp takes the following arguments:
           [-u | -h]
 
 
-   -c <command string> : send the command string.  Command strings without an "=" character cause the utility to echo back a response.
+    -c <command string> : send the command string.  Command strings without an "=" character cause the utility to echo back a response.
 
-   -s : Set the Device RTC with the current system clock
+    -s : Set the Device RTC with the current system clock
+ 
+    -t : Get the time from the Device RTC and display it in a form useful to pass to "date" to set the system clock ("+%m%d%H%M%Y.%S")
 
-   -t : Get the time from the Device RTC and display it in a form useful to pass to "date" to set the system clock ("+%m%d%H%M%Y.%S")
+    -f : Get the time from the Device RTC and display it in a readable form.
 
-   -f : Get the time from the Device RTC and display it in a readable form.
+    -a <alarm timespec> : Set the Device wakeup value (does not enable the alarm).  <alarm timespec> is the alarm time in date time format ("+%m%d%H%M%Y.%S")
 
-   -a <alarm timespec> : Set the Device wakeup value (does not enable the alarm).  <alarm timespec> is the alarm time in date time format ("+%m%d%H%M%Y.%S")
+    -d <delta seconds> : Set the Device wakeup to <delta seconds> past the current Device RTC time value (does not enable the alarm)
 
-   -d <delta seconds> : Set the Device wakeup to <delta seconds> past the current Device RTC time value (does not enable the alarm)
+    -w : Display the wakeup value in a readable form.
 
-   -w : Display the wakeup value in a readable form.
-
-   -u, -h : Usage (and optional help)
+    -u, -h : Usage (and optional help)
 
 
 Example command to Solar Pi Platter: `talkpp -c B`
@@ -72,7 +72,7 @@ ppd takes the following command line arguments:
 There are many ways to start a daemon, for example a configuration file in / or a script in /etc/init.d.  A very easy way to start it is to include it in /etc/rc.local.  For example, add the following before the "exit 0" at the end of /etc/rc.local (assuming you have placed the ppd executable in /usr/local/bin).
 
     # Start the Pi Platter Daemon
-    /usr/local/bin/pdd -p 23000 -r -d &
+    /usr/local/bin/ppd -p 23000 -r -d &
 
 This starts ppd with socket communication available on port 23000 and auto-restart in the event of a critical battery shutdown.
 
