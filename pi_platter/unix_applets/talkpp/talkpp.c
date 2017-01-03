@@ -1,4 +1,8 @@
-// Program to send a command and receive any response from the pi platter
+// Program to send a command and receive any response from the pi platter.
+//
+// First tries to communicate throught the pseudo-tty "/dev/pi-platter" that is
+// created when the daemon, ppd, is running.  If that fails (e.g. the daemon is
+// not running) then it tries to open the serial port associated with the board.
 //
 //   talkpp [-c <command string>]
 //          [-s] [-t] [-f]
@@ -19,6 +23,7 @@
 //   -u, -h : Usage (and optional help)
 //
 // Build: gcc -o talkpp talkpp.c -ludev
+//  (install libudev-dev first)
 //
 #include <ctype.h>
 #include <fcntl.h>
@@ -39,7 +44,7 @@
 #define FALSE               0
 
 #define VERSION_MAJOR       0
-#define VERSION_MINOR       4
+#define VERSION_MINOR       5
 
 // MAX_WAIT_TIME is uSec to wait for a response after sending a command
 // (seems to need to be pretty high a pi)
@@ -127,9 +132,6 @@ int OpenSerialPort(const char *deviceFilePath)
     fd = open(deviceFilePath, O_RDWR | O_NOCTTY | O_NONBLOCK);
     if (fd == -1)
     {
-        fprintf(stderr, "Error opening serial port %s - %s(%d)\n", 
-                deviceFilePath, strerror(errno), errno);
-        close(fd);
         return(-1);
     }
 
@@ -444,9 +446,12 @@ int main(int argc, char** argv) {
         return(-1);
     }
 
-    // Try to open the serial port
-    if ((serialFd = OpenSerialPort(serName)) == -1) {
-        return(-1);
+    // Try to open the serial port indirectly or directly associated with the pi platter
+    if ((serialFd = OpenSerialPort("/dev/pi-platter")) == -1) {
+        if ((serialFd = OpenSerialPort(serName)) == -1) {
+            perror("Could not open Pi Platter");
+            return(-1);
+	}
     }
 
     // Output any string that we get as soon as we opened the device

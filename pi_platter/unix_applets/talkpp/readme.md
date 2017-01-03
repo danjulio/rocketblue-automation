@@ -2,9 +2,9 @@
 
 This directory contains the code for the talkpp utilty.
 
-talkpp is designed to run a Raspberry Pi (or other linux computer) and allow communication with the Solar Pi Platter board via usb.  It provides a simple command line interface to send commands to (and get responses from) the Solar Pi Platter.  It also provides some commands to make managing time wit the Solar Pi Platter's RTC easier.
+talkpp is designed to run on a Raspberry Pi (or other linux computer) and allow communication with the Solar Pi Platter board either through the pseudo-tty created by the daemon ppd or the USB hardware port directly associated with the Solar Pi Platter if ppd is not running.  It provides a simple command line interface to send commands to (and get responses from) the Solar Pi Platter.  It also provides some commands to make managing time wit the Solar Pi Platter's RTC easier.
 
-It uses udev to be able to idenfity which serial device belongs to the Solar Pi Platter (via the USB VID, PID and product strings).
+It uses udev to be able to idenfity which hardware serial device belongs to the Solar Pi Platter (via the USB VID, PID and product strings).
 
 
 ###Building
@@ -14,6 +14,13 @@ A prebuilt binary is included here but building is very easy:
  gcc -o talkpp talkpp.c -ludev
 
 The compiled binary may be copied to /usr/local/bin.
+
+    sudo mv ppd /usr/local/bin
+
+libudev-dev must be installed:
+
+    sudo apt-get update
+    sudo apt-get install libudev-dev
 
 
 ###Usage
