@@ -4,8 +4,6 @@ This directory contains the code for the ppd daemon.
 
 ppd is a daemon program designed to run on a Raspberry Pi (or other linux computer).  It allows the system to execute a controlled shutdown in the case of a critically low battery voltage (that has triggered the Solar Pi Platter to start a count-down to powering down the entire system).  This is important to protect the Raspberry Pi's SD-card filesystem from corruption that can occur when power is removed from a running system.  It does this by connecting to the hardware serial port associated with the Solar Pi Platter (like talkpp, it uses udev to figure this out) and looks for the WARN string sent the Solar Pi Platter for critical battery detection.  Since it "commandeers" the hardware serial port, it also provides additional mechanisms for user application code to communicate with the Solar Pi Platter.  It always creates the pseudo-tty "/dev/pi-platter" which can be treated like a serial port connection.  It can optionally also create 
 
-allow communication with the Solar Pi Platter board either through the pseudo-tty created by the daemon ppd or the USB hardware port directly associated with the Solar Pi Platter if ppd is not running.  It provides a simple command line interface to send commands to (and get responses from) the Solar Pi Platter.  It also provides some commands to make managing time wit the Solar Pi Platter's RTC easier.
-
 It uses udev to be able to idenfity which hardware serial device belongs to the Solar Pi Platter (via the USB VID, PID and product strings).
 
 
