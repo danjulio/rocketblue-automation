@@ -15,7 +15,12 @@ A prebuilt binary is included here but building is very easy:
 
 The compiled binary may be copied to /usr/local/bin.
 
-    sudo mv ppd /usr/local/bin
+    sudo mv talkpp /usr/local/bin
+
+You may have to set appropriate permissions (you will have to do this if you just copy the
+prebuilt binary from git to /usr/local/bin).
+
+    sudo chmod 775 /usr/local/bin/talkpp
 
 libudev-dev must be installed:
 
@@ -69,6 +74,17 @@ Note that both methods of setting a wakeup time do not enable the wakeup alarm. 
 Viewing the wakeup time currently set in the Solar Pi Platter in a readable form.
 
     talkpp -w
+
+
+###Useful Shutdown Script
+
+The following is a simple script that you can put in /usr/local/bin that will shut down the Pi and then power-down the entire system in a controlled fashion.  I name the script "powerdown".  You can cut&paste the following code into any editor and then write it out and copy it to /usr/local/bin with "sudo mv".  Be sure to set appropriate executable permissions with "sudo chmod 775 /usr/local/bin/powerdown".
+
+    #!/bin/bash
+    # powerdown script for Raspberry Pi and Solar Pi Platter
+    #
+    /usr/local/bin/talkpp -c O=30
+    sudo shutdown now
 
 
 ###Questions?

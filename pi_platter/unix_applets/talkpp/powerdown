@@ -1,0 +1,5 @@
+#!/bin/bash
+# powerdown script for Raspberry Pi and Solar Pi Platter
+#
+/usr/local/bin/talkpp -c O=30
+sudo shutdown now
