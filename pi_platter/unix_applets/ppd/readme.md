@@ -17,6 +17,11 @@ The compiled binary should be copied to /usr/local/bin.
 
     sudo mv ppd /usr/local/bin
 
+You may have to set appropriate permissions (you will have to do this if you just copy the
+prebuilt binary from git to /usr/local/bin).
+
+    sudo chmod 775 /usr/local/bin/ppd
+
 libudev-dev must be installed:
 
     sudo apt-get update
