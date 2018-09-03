@@ -2,7 +2,7 @@
 
 This directory contains Raspbian utility software for the Solar Pi Platter.
 
-###talkpp
+### talkpp
 talkpp is a utility program to simplify communicating with the Solar Pi Platter.  It provides a simple command-line interface to allow the user to directly (or via scripts) send commands to the board and to easily manage the Real Time Clock.  
 
 Starting with version 0.5 it can communicate with the Solar Pi Platter via either the pseudo-tty /dev/pi-platter if the ppd daemon is running or the actual hardware serial device associated with the board if ppd is not running.  It uses udev to automatically find the correct serial device for the board, independent of other USB serial devices.
@@ -50,7 +50,7 @@ Setting the Pi's RTC from the Solar Pi Platter (using BASH): `sudo date $(talkpp
 
 talkpp will echo responses from the Solar Pi Platter to stdout.  It will also echo the last warnings or error messages that has been sent.
 
-###ppd
+### ppd
 ppd is a daemon for the Solar Pi Platter.  It provides two main functions.  It will execute a controlled shutdown if the Solar Pi Platter detects a critical battery voltage (and will power-down the entire system after [default] 30 seconds).  Since it opens the serial port associated with the Solar Pi Platter it also provides one or two mechanisms for other applications to communicate with the Solar Pi Platter.  It creates a pseudo-tty device named /dev/pi-platter which can be used just like the hardware serial port.  It also, optionally, can create a TCP port for applications like telnet to connect to.  
 
 It is important that software not open the hardware serial port, /dev/ttyACM<n>, when ppd is running since it is using the port.
@@ -84,7 +84,7 @@ Both the source and a binary compiled under Raspbian Jessie are included.  The b
     sudo mv ppd /usr/local/bin
 
 
-###Questions?
+### Questions?
 
-Contact the author @ dan@danjuliodesigns.com
+Contact the author - dan@danjuliodesigns.com
 
