@@ -1,0 +1,60 @@
+#!/bin/bash
+#
+# Update status display
+#
+
+#
+# Attempt to get a lock on the pi platter
+#
+lockdir="/tmp/lock.pp"
+
+if ! mkdir "$lockdir" >&/dev/null; then
+    exit 1
+fi
+
+#
+# Get the status and battery voltage
+#
+STATUS=$(/data/etc/talkpp -c S)
+BATT=$(/data/etc/talkpp -c B)
+
+#
+# Parse the status into flags
+#
+FLG_CHG=$(( $STATUS & 8 ))
+FLG_AC=$(( $STATUS & 4 ))
+FLG_CRIT=$(( $STATUS & 2 ))
+FLG_LOW=$(( $STATUS & 1 ))
+
+#
+# Create the display line
+#
+if [ "$FLG_AC" -eq 4 ]; then
+	echo "AC PWR - "
+fi
+
+echo -n BATT "$BATT"V 
+
+if [ "$FLG_CHG" -eq 8 ]; then
+	echo " CHG"
+fi
+
+if [ "$FLG_CRIT" -eq 2 ]; then
+	echo " CRITICAL"
+else
+	if [ "FLG_LOW" -eq 1 ]; then
+		echo " LOW"
+	fi
+fi
+
+
+#
+# Schedule our next execution in 10 seconds
+#
+echo 10 1>&2
+
+
+#
+# Clean up lock
+#
+rmdir "$lockdir"

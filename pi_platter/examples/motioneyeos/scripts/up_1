@@ -1,0 +1,75 @@
+#!/bin/bash
+#
+# Tilt the camera up a small amount
+#  - Decrease PWM Channel 2 (P2) a small amount to tilt up
+#
+
+                                                                                              
+#                                                                                             
+# Attempt to get a lock on the pi platter                                                     
+#                                                                                             
+lockdir="/tmp/lock.pp"                                                                        
+                                                                                              
+if ! mkdir "$lockdir" >&/dev/null; then                                                       
+    exit 1                                                                                    
+fi 
+
+
+# #########
+# Constants
+# #########
+
+# Maximum PWM value
+PWM_MIN=50
+
+# Tilt amount
+PWM_TILT=20
+
+# Decrement amount
+PWM_DEC=2
+
+
+# #########
+# Code
+# #########
+
+#
+# First make sure that the Pi Platter is in servo mode if it isn't already
+#
+PWM_MODE=$(/data/etc/talkpp -c C6)
+if [ "$PWM_MODE" -ne 3 ]; then
+	/data/etc/talkpp -c C6=3
+fi
+
+
+#
+# Get the current value
+#
+PWM_CUR=$(/data/etc/talkpp -c P2)
+
+
+#
+# Compute the new PWM value
+# 
+PWM_LIM=$(( $PWM_CUR - $PWM_TILT ))
+if [ "$PWM_LIM" -lt "$PWM_MIN" ]; then
+	PWM_LIM=$PWM_MIN
+fi
+
+
+#
+# Loop decrementing the PWM value until it reaches the new PWM value
+#
+/data/etc/talkpp -c P2=$PWM_LIM
+#while [ "$PWM_CUR" -gt "$PWM_LIM" ];
+#do
+#	PWM_CUR=$(( $PWM_CUR - $PWM_DEC ))
+#	/data/etc/talkpp -c P2=$PWM_CUR
+#	usleep 10000
+#done
+
+                              
+#   
+# Clean up lock                     
+#                          
+rmdir "$lockdir"
