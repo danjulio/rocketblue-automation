@@ -172,6 +172,12 @@ This command may be included in the ```userinit.sh``` file.
 ### Temperature Measurement using Pi Platter analog input
 The Pi Platter includes two analog inputs with configurable ADC voltage references.  These could be used to for additional status information like temperature using an analog temperature sensor.
 
-For example, the TMP36 chip can operate from 5V and outputs a voltage directly proportional to the temperature over the range −40°C to +125°C.  It has a 500 mV (0.5V) offset at 0°C and a 10mV per °C change (the device will read 750 mV at 25°C).  Configuring the Pi Platter ADC reference to 1.024 volts allows 10-bit ADC measurements from −40°C to +52.4°C.
+For example, the TMP36 chip can operate from 5V and outputs a voltage directly proportional to the temperature over the range −40°C to +125°C.  It has a 500 mV (0.5V) offset at 0°C and a 10mV per °C change (the device will read 750 mV at 25°C).  Configuring the Pi Platter ADC reference to 1.024 volts allows 10-bit ADC measurements from −40°C to +52.4°C and makes converting the ADC reading to temperature very easy.
+
+```
+	Temp in °C = ([ADC reading] - 500) / 10
+```
+
+where the ```[ADC reading]``` is the 10-bit that can be obtained from the Pi Platter using the command ```talkpp -c A1``` for ADC channel 1 or ```talkpp -c A2``` for ADC channel 2.
 
 Information about using the ADC inputs can be found in the Pi Platter user manual.  The ```monitor_1``` may be modified to read and display the temperature from the analog input(s).
