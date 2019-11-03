@@ -1,6 +1,6 @@
 ## Documentation
 
-This directory contains the script for the solar powered time-lapse camera documented at [my webisite](http://www.danjuliodesigns.com/products/solar_pi_platter/timelapse.html).
+This directory contains the script for the solar powered time-lapse camera documented at [my webisite](https://www.danjuliodesigns.com/products/pi_platter_timelapse.html).
 
 The script controls taking a picture, scheduling the next wake-up time for the systme and then executing a controlled shutdown and powerdown.
 
