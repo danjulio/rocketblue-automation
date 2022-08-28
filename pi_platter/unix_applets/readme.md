@@ -63,6 +63,8 @@ ppd takes the following command line arguments:
 
     -m max-connections : Specify the maximum number of socket connections that can be made to the port specified with -p.  The default is 1.
 
+    -o seconds : Configure Pi Platter to shut off power after the specified period upon receipt of SIGTERM.
+
     -r : Enable auto-restart on charge (set the Pi Platter "C7=1") after critical battery shutdown.
 
     -x debuglevel : Set the debug level (ppd uses the system logging facility.  0 is default (only log start-up).  Values of 1 - 3 include progressively more information.
@@ -83,8 +85,7 @@ Both the source and a binary compiled under Raspbian Jessie are included.  The b
     gcc -o ppd ppd.c -ludev
     sudo mv ppd /usr/local/bin
 
+### pp\_power\_mon
+pp\_power\_mon is a Desktop widget designed to display the Solar Pi Platter voltage and charge status as well as provide control over the two switchable USB ports.
 
-### Questions?
-
-Contact the author - dan@danjuliodesigns.com
 
