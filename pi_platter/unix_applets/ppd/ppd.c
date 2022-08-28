@@ -6,13 +6,14 @@
  *      restart on charge.
  *   2. A new pseudo-tty called /dev/pi-platter for applications to connect too
  *   3. An optional port for direct TCP connection by applications
+ *   4. Optional power off a configurable number of seconds after seeing SIGTERM
  *
  * Parts of this code are thanks to Paul Davis' remserial code.
  *
  * Build: gcc -o ppd ppd.c -ludev
  *  (install libudev-dev first)
  *
- * Copyright (c) 2016 Dan Julio, dan@danjuliodesigns.com
+ * Copyright (c) 2016, 2022 Dan Julio, dan@danjuliodesigns.com
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,6 +31,7 @@
  *
  */
 #include <stdio.h>
+#define __USE_XOPEN_EXTENDED
 #include <stdlib.h>
 #include <string.h>
 #include <fcntl.h>
@@ -52,7 +54,7 @@
 #define MAX_SER_NAME_CHARS  64
 
 #define VERSION_MAJOR       0
-#define VERSION_MINOR       1
+#define VERSION_MINOR       2
 
 
 char serName[MAX_SER_NAME_CHARS];
@@ -72,6 +74,7 @@ int sawWarnLow = 0;
 fd_set fdsread,fdsreaduse;
 int curConnects = 0;
 int sendMask = 0x01;
+int shutdownSecs = 0;
 
 extern char* ptsname(int fd);
 
@@ -220,14 +223,22 @@ int ProcessResponse(char* strP, int strLen)
 
 void SigHandler(int sig)
 {
+	char buf[32];
 	int i;
 
 	if ( sockfd != -1 )
 		close(sockfd);
 	for (i=0 ; i<curConnects ; i++)
 		close(remotefd[i]);
-	if ( serialFd != -1)
+	if ( serialFd != -1) {
+		if ((sig == SIGTERM) && (shutdownSecs != 0)) {
+			// Configure the Pi Platter to shut down
+			sprintf(buf, "O=%d\r", shutdownSecs);
+			write(serialFd, buf, strlen(buf));
+			tcdrain(serialFd);
+		}
 		close(serialFd);
+	}
 	if ( linkFd != -1 )
 		close(linkFd);
 	if (linkname)
@@ -267,12 +278,13 @@ void LinkSlave(int fd)
 
 void Usage(char *progname) {
 	printf("ppd version %0d.%0d.  Usage:\n", VERSION_MAJOR, VERSION_MINOR);
-	printf("ppd [-d] [-p netport] [-m maxconnect] [-x debuglevel] [-h]\n\n");
+	printf("ppd [-d] [-p netport] [-m maxconnect] [-o seconds] [-r] [-x debuglevel] [-h]\n\n");
 
 	printf("-d			Run as a daemon program\n");
-	printf("-p netport		Enable socket connection on IP port#\n");
+	printf("-p netport		Enable socket connection on IP port #\n");
 	printf("-m max-connections	Maximum number of simultaneous client connections to allow\n");
-	printf("			 (only applies if -p is also specified)\n");
+	printf("			 (only applies if -p is also specified - default 1)\n");
+	printf("-o seconds		Configure Pi Platter to shut off power after the specified period upon receipt of SIGTERM\n");
 	printf("-r                      Enable auto-restart after critical battery shutdown\n");
 	printf("-x debuglevel		Set debug level, 0 is default, 1-3 give more info\n");
 	printf("-h                      Usage\n");
@@ -292,7 +304,7 @@ int main(int argc, char *argv[])
 	int maxConnects = 1;
 	register int i;
 
-	while ( (c=getopt(argc,argv,"dm:p:rx:h")) != EOF )
+	while ( (c=getopt(argc,argv,"dm:p:o:rx:h")) != EOF )
 		switch (c) {
 		case 'd':
 			isdaemon = 1;
@@ -302,6 +314,9 @@ int main(int argc, char *argv[])
 			break;
 		case 'p':
 			port = atoi(optarg);
+			break;
+		case 'o':
+			shutdownSecs = atoi(optarg);
 			break;
 		case 'r':
 			restartEnable = 1;
@@ -329,6 +344,9 @@ int main(int argc, char *argv[])
 	if ((serialFd = OpenSerialPort(serName)) == -1) {
 		exit(1);
 	}
+
+	// Disable any ongoing shutdown timer (supports reboot)
+	write(serialFd, "O=0\r", 4);
 
 	// Initialize Pi Platter for Critical battery WARN message
 	write(serialFd, "C2=1\r", 5);

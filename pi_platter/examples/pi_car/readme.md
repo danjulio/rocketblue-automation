@@ -2,6 +2,10 @@
 
 This directory contains the components used for the Pi Car designed as an example during the kickstarter campaign.  It probably can't be used as-is but may give some ideas.
 
+![Pi Car](pictures/pi_car_lg.png)
+
+![Pi Car Block Diagram](pictures/pi_car_illustrated.png)
+
 ### Motor Control
 
 The Pi Car was built on an old Sparkfun Ardubot base.  The Ardubot was designed to be controlled by an Arduino with only forward/reverse control at a fixed speed but contained a prototyping area.  It used a L293D driver with the Enable input tied high.  I modified the board so the Solar Pi Platter PWM signals drove the Enable input for speed control.  A pair of NPN transistor inverters allowed Pi GPIO signals to control motor direction.  The high PWM frequency is used for smooth motor control.
@@ -30,7 +34,9 @@ An old analog joystick (2 10-kohm pots and a button) was connected to an Arduino
 
 There are three software components.
 
-1. pi_car.c - This is the software running on the Raspberry Pi.  It uses a single TCP port for communication with the control software running on the control computer.  It requires [WiringPi](http://wiringpi.com/) to be installed (for access to the GPIO pins).
-2. pi_car_tv - A [xojo](http://www.xojo.com/) project that implements the main control program.  This project may be compiled for Windows, Mac OS X or Linux.  Xojo is a commercial product which requires a paid license to build a binary executable but the project can be compiled and run from within the IDE without any license.
-3. read_joystick.ino - The arduino sketch reading the joystick.  Should be put in a folder called read_joystick.
+1. pi\_car.c - This is the software running on the Raspberry Pi.  It uses a single TCP port for communication with the control software running on the control computer.  It requires [WiringPi](http://wiringpi.com/) to be installed (for access to the GPIO pins).
+2. pi\_car\_tv - A [Xojo](https://www.xojo.com/) project that implements the main control program.  This project may be compiled for Windows, Mac OS X or Linux.  Xojo is a commercial product which requires a paid license to build a binary executable but the project can be compiled and run from within the IDE without any license.  Builds for several platforms are found here.
+3. read\_joystick.ino - The arduino sketch reading the joystick.  Should be put in a folder called read\_joystick.
+
+![Pi Car Video](pictures/pi_car_tv_spin.png)
 

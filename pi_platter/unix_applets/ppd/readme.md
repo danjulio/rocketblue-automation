@@ -45,6 +45,8 @@ ppd takes the following command line arguments:
     -p netport : Enable a TCP socket connection on the specified port.  This is required to enable socket communication with ppd.  Exclude this line to only enable /dev/pi-platter as a mechanism to communicate with the Solar Pi Platter.
 
     -m max-connections : Specify the maximum number of socket connections that can be made to the port specified with -p.  The default is 1.
+    
+    -o seconds : Configure Pi Platter to shut off power after the specified period upon receipt of SIGTERM.
 
     -r : Enable auto-restart on charge (set the Pi Platter "C7=1") after critical battery shutdown.
 
@@ -69,6 +71,15 @@ Which should result in something like (user types "B" and then "S"):
     S=20
 
 Note that opening the socket without additional precautions may be a security risk (anybody could telnet to your Pi and shut it down).  That's why ppd makes this an option.
+
+####Soft shutdown
+The ```-o``` option (introduced in version 0.2) configures the program to automatically power off the Pi a configurable number of seconds after receiving a SIGTERM signal.  SIGTERM is sent when the Pi has been commanded to shut down (for example using the GUI or ```shutdown``` command).
+
+Start the program as a daemon using this option with an argument of seconds longer than it takes for the Pi to execute a shutdown and the system will power off automatically.
+
+	/usr/local/bin/ppd -p 23000 -o 30 -r -d &
+
+Just be sure to use a SIGKILL to stop the daemon (```kill -9```) so that it doesn't misinterpret a ```kill`` you are sending it to stop it running for a system shutdown.
 
 ###Questions?
 
